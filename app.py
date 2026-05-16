@@ -1,15 +1,12 @@
 import os
-import re
 from dotenv import load_dotenv
 load_dotenv()
-from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from authlib.integrations.flask_client import OAuth
-from scraper import (get_today_games, get_games_by_date, get_batting_stats, get_pitching_stats,
-                     get_team_rankings, get_game_detail, get_player_detail)
 from stadium_data import STADIUMS, STADIUM_COORDS
 from cheer_data import CHEER_DATA
 from datetime import datetime
@@ -66,32 +63,6 @@ def index():
     today = datetime.now().strftime("%Y년 %m월 %d일")
     return render_template("index.html", today=today)
 
-@app.route("/stats")
-def stats():
-    tab = request.args.get("tab", "batting")
-    if tab == "pitching":
-        data = get_pitching_stats()
-    else:
-        data = get_batting_stats()
-    return render_template("stats.html", data=data, tab=tab)
-
-@app.route("/api/stats")
-def api_stats():
-    tab = request.args.get("tab", "batting")
-    if tab == "pitching":
-        return jsonify(get_pitching_stats())
-    return jsonify(get_batting_stats())
-
-@app.route("/game/<game_code>")
-def game_detail(game_code):
-    data = get_game_detail(game_code)
-    return render_template("game_detail.html", data=data, game_code=game_code)
-
-@app.route("/player/<player_id>")
-def player_detail(player_id):
-    data = get_player_detail(player_id)
-    return render_template("player_detail.html", data=data)
-
 @app.route("/stadium")
 def stadium():
     return render_template("stadium.html", stadiums=STADIUMS)
@@ -110,24 +81,6 @@ def cheer():
     if team not in CHEER_DATA:
         team = "lg"
     return render_template("cheer.html", cheer=CHEER_DATA, team=team, cur=CHEER_DATA[team])
-
-@app.route("/schedule")
-def schedule():
-    from datetime import timedelta
-    today = datetime.now()
-    date_str = request.args.get("date", today.strftime("%Y%m%d"))
-    if not re.match(r"^\d{8}$", date_str):
-        date_str = today.strftime("%Y%m%d")
-    games = get_games_by_date(date_str)
-    dt        = datetime.strptime(date_str, "%Y%m%d")
-    prev_date = (dt - timedelta(days=1)).strftime("%Y%m%d")
-    next_date = (dt + timedelta(days=1)).strftime("%Y%m%d")
-    display   = dt.strftime("%Y년 %m월 %d일")
-    return render_template("schedule.html", games=games, date_str=date_str,
-                           display=display, prev_date=prev_date, next_date=next_date,
-                           now_str=today.strftime("%Y%m%d"),
-                           yesterday_str=(today - timedelta(days=1)).strftime("%Y%m%d"),
-                           week_ago_str=(today - timedelta(days=7)).strftime("%Y%m%d"))
 
 @app.route("/tips")
 def tips():

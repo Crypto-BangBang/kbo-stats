@@ -4,21 +4,11 @@
 {% block content %}
 <div class="page-hero">
   <h1 class="hero-title">⚾ KBO 야구 분석</h1>
-  <p class="hero-sub">{{ today }} · 구장 정보, 경기 기록, 응원가를 한곳에서</p>
+  <p class="hero-sub">{{ today }} · 구장 정보, 응원가, 야구 꿀팁을 한곳에서</p>
 </div>
 
 <div class="container">
-
   <div class="hub-grid">
-
-    <a href="/schedule" class="hub-card">
-      <div class="hub-icon">📅</div>
-      <div class="hub-body">
-        <h3 class="hub-title">경기 기록</h3>
-        <p class="hub-desc">날짜별 KBO 경기 결과와 스코어를 확인하세요</p>
-      </div>
-      <span class="hub-arrow">→</span>
-    </a>
 
     <a href="/stadium" class="hub-card">
       <div class="hub-icon">🏟️</div>
@@ -34,15 +24,6 @@
       <div class="hub-body">
         <h3 class="hub-title">응원가</h3>
         <p class="hub-desc">10개 구단 응원가 가사와 유튜브 링크</p>
-      </div>
-      <span class="hub-arrow">→</span>
-    </a>
-
-    <a href="/stats" class="hub-card">
-      <div class="hub-icon">📊</div>
-      <div class="hub-body">
-        <h3 class="hub-title">선수 통계</h3>
-        <p class="hub-desc">KBO 타자·투수 시즌 성적 순위</p>
       </div>
       <span class="hub-arrow">→</span>
     </a>
@@ -65,18 +46,8 @@
       </div>
       <span class="hub-arrow">→</span>
     </a>
-    {% else %}
-    <a href="/schedule" class="hub-card hub-card-cta">
-      <div class="hub-icon">🔍</div>
-      <div class="hub-body">
-        <h3 class="hub-title">오늘 경기 확인</h3>
-        <p class="hub-desc">오늘 날짜 경기 기록 바로 보기</p>
-      </div>
-      <span class="hub-arrow">→</span>
-    </a>
     {% endif %}
 
   </div>
-
 </div>
 {% endblock %}
