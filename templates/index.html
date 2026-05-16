@@ -1,120 +1,82 @@
 {% extends "base.html" %}
-{% block title %}경기현황 — KBO 분석{% endblock %}
+{% block title %}KBO 야구 분석{% endblock %}
 
 {% block content %}
 <div class="page-hero">
-  <h1 class="hero-title">⚾ 오늘의 경기</h1>
-  <p class="hero-sub">{{ today }} 실시간 KBO 경기 현황</p>
+  <h1 class="hero-title">⚾ KBO 야구 분석</h1>
+  <p class="hero-sub">{{ today }} · 구장 정보, 경기 기록, 응원가를 한곳에서</p>
 </div>
 
 <div class="container">
 
-  <!-- 오늘 경기 -->
-  <section class="card-section">
-    <h2 class="section-title">경기 일정</h2>
-    <div id="gamesArea">
-      <div class="empty-box"><p>⏳ 경기 정보 불러오는 중...</p></div>
-    </div>
-  </section>
+  <div class="hub-grid">
 
-  <!-- 팀 순위 -->
-  <section class="card-section">
-    <h2 class="section-title">팀 순위</h2>
-    <div id="rankArea">
-      <div class="empty-box"><p>⏳ 순위 불러오는 중...</p></div>
-    </div>
-  </section>
+    <a href="/schedule" class="hub-card">
+      <div class="hub-icon">📅</div>
+      <div class="hub-body">
+        <h3 class="hub-title">경기 기록</h3>
+        <p class="hub-desc">날짜별 KBO 경기 결과와 스코어를 확인하세요</p>
+      </div>
+      <span class="hub-arrow">→</span>
+    </a>
 
-  <!-- 승률 차트 -->
-  <section class="card-section" id="chartSection" style="display:none;">
-    <h2 class="section-title">승률 차트</h2>
-    <div class="chart-wrap">
-      <canvas id="teamChart"></canvas>
-    </div>
-  </section>
+    <a href="/stadium" class="hub-card">
+      <div class="hub-icon">🏟️</div>
+      <div class="hub-body">
+        <h3 class="hub-title">구장 가이드</h3>
+        <p class="hub-desc">1군·2군 구장 정보, 교통, 실시간 날씨까지</p>
+      </div>
+      <span class="hub-arrow">→</span>
+    </a>
+
+    <a href="/cheer" class="hub-card">
+      <div class="hub-icon">🎤</div>
+      <div class="hub-body">
+        <h3 class="hub-title">응원가</h3>
+        <p class="hub-desc">10개 구단 응원가 가사와 유튜브 링크</p>
+      </div>
+      <span class="hub-arrow">→</span>
+    </a>
+
+    <a href="/stats" class="hub-card">
+      <div class="hub-icon">📊</div>
+      <div class="hub-body">
+        <h3 class="hub-title">선수 통계</h3>
+        <p class="hub-desc">KBO 타자·투수 시즌 성적 순위</p>
+      </div>
+      <span class="hub-arrow">→</span>
+    </a>
+
+    <a href="/tips" class="hub-card">
+      <div class="hub-icon">💡</div>
+      <div class="hub-body">
+        <h3 class="hub-title">야구 꿀팁</h3>
+        <p class="hub-desc">야구 규칙, 용어, 직관 팁 완벽 가이드</p>
+      </div>
+      <span class="hub-arrow">→</span>
+    </a>
+
+    {% if not current_user.is_authenticated %}
+    <a href="/register" class="hub-card hub-card-cta">
+      <div class="hub-icon">🙋</div>
+      <div class="hub-body">
+        <h3 class="hub-title">회원가입</h3>
+        <p class="hub-desc">가입하고 더 많은 기능을 이용하세요</p>
+      </div>
+      <span class="hub-arrow">→</span>
+    </a>
+    {% else %}
+    <a href="/schedule" class="hub-card hub-card-cta">
+      <div class="hub-icon">🔍</div>
+      <div class="hub-body">
+        <h3 class="hub-title">오늘 경기 확인</h3>
+        <p class="hub-desc">오늘 날짜 경기 기록 바로 보기</p>
+      </div>
+      <span class="hub-arrow">→</span>
+    </a>
+    {% endif %}
+
+  </div>
 
 </div>
-
-<script>
-fetch('/api/home')
-  .then(r => r.json())
-  .then(data => {
-    renderGames(data.games);
-    renderRanks(data.teams);
-    if (data.teams && data.teams.length) renderChart(data.teams);
-  })
-  .catch(() => {
-    document.getElementById('gamesArea').innerHTML = '<div class="empty-box"><p>데이터를 불러올 수 없어요. 잠시 후 새로고침 해주세요.</p></div>';
-    document.getElementById('rankArea').innerHTML  = '<div class="empty-box"><p>데이터를 불러올 수 없어요.</p></div>';
-  });
-
-function renderGames(games) {
-  if (!games || !games.length) {
-    document.getElementById('gamesArea').innerHTML = '<div class="empty-box"><p>오늘은 경기가 없거나 아직 일정이 발표되지 않았어요.</p></div>';
-    return;
-  }
-  let html = '<div class="games-grid">';
-  games.forEach(g => {
-    const tag  = g.game_code ? `<a href="/game/${g.game_code}" class="game-card game-card-link">` : '<div class="game-card">';
-    const end  = g.game_code ? '</a>' : '</div>';
-    const score = g.score || 'vs';
-    const stad  = g.stadium ? `<div class="game-stadium">📍 ${g.stadium}</div>` : '';
-    const hint  = g.game_code ? '<div class="game-detail-hint">기록 보기 →</div>' : '';
-    html += `${tag}
-      <div class="game-time">${g.time}${g.status ? ' · ' + g.status : ''}</div>
-      <div class="game-teams">
-        <span class="team away">${g.away}</span>
-        <span class="game-score">${score}</span>
-        <span class="team home">${g.home}</span>
-      </div>
-      ${stad}${hint}
-    ${end}`;
-  });
-  html += '</div>';
-  document.getElementById('gamesArea').innerHTML = html;
-}
-
-function renderRanks(teams) {
-  if (!teams || !teams.length) {
-    document.getElementById('rankArea').innerHTML = '<div class="empty-box"><p>순위 데이터를 불러올 수 없어요.</p></div>';
-    return;
-  }
-  const medals = ['🥇','🥈','🥉'];
-  let rows = teams.map((t, i) => `
-    <tr class="${i < 5 ? 'playoff' : ''}">
-      <td class="rank-cell">${medals[i] || t.rank}</td>
-      <td class="team-name">${t.team}</td>
-      <td>${t.games}</td>
-      <td class="win">${t.wins}</td>
-      <td class="loss">${t.losses}</td>
-      <td>${t.draws}</td>
-      <td class="pct">${t.pct}</td>
-      <td>${t.gb}</td>
-    </tr>`).join('');
-  document.getElementById('rankArea').innerHTML = `
-    <div class="table-wrap">
-      <table class="data-table">
-        <thead><tr><th>순위</th><th>팀</th><th>경기</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>게임차</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-    <p class="table-note">* 상위 5팀 포스트시즌 진출</p>`;
-}
-
-function renderChart(teams) {
-  document.getElementById('chartSection').style.display = '';
-  const labels = teams.map(t => t.team);
-  const pcts   = teams.map(t => t.pct === '-' ? 0 : t.pct);
-  const colors = labels.map((_, i) => `hsl(${210 + i * 15}, 70%, ${55 + i * 2}%)`);
-  new Chart(document.getElementById('teamChart'), {
-    type: 'bar',
-    data: { labels, datasets: [{ label: '승률', data: pcts, backgroundColor: colors, borderRadius: 8 }] },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { min: 0, max: 1, ticks: { callback: v => (v * 100).toFixed(0) + '%' } } }
-    }
-  });
-}
-</script>
 {% endblock %}
