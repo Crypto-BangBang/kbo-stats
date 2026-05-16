@@ -60,13 +60,32 @@ def load_user(uid):
 with app.app_context():
     db.create_all()
 
+# ── 간단 메모리 캐시 ────────────────────────────────────
+import time
+_cache = {}
+def _cached(key, fn, ttl=300):
+    now = time.time()
+    if key in _cache and now - _cache[key]["t"] < ttl:
+        return _cache[key]["v"]
+    try:
+        v = fn()
+    except Exception:
+        v = _cache[key]["v"] if key in _cache else []
+    _cache[key] = {"v": v, "t": now}
+    return v
+
 # ── 메인 라우트 ─────────────────────────────────────────
 @app.route("/")
 def index():
-    games = get_today_games()
-    teams = get_team_rankings()
     today = datetime.now().strftime("%Y년 %m월 %d일")
-    return render_template("index.html", games=games, teams=teams, today=today)
+    return render_template("index.html", games=[], teams=[], today=today)
+
+@app.route("/api/home")
+def api_home():
+    import json
+    games = _cached("games", get_today_games, 180)
+    teams = _cached("teams", get_team_rankings, 300)
+    return jsonify({"games": games, "teams": teams})
 
 @app.route("/stats")
 def stats():
