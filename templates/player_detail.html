@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}{{ data.name or '선수' }} — KBO 분석{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="hero-title">{{ data.name or '선수 정보' }}</h1>
+  <p class="hero-sub">{{ data.team }} {% if data.position %}· {{ data.position }}{% endif %}</p>
+</div>
+
+<div class="container">
+  <a href="/stats" class="back-btn">← 선수기록으로</a>
+
+  {% if not data or not data.name %}
+  <div class="card-section empty-box">
+    <p>선수 데이터를 불러올 수 없어요.<br>잠시 후 다시 시도해주세요.</p>
+  </div>
+
+  {% else %}
+
+  <!-- 선수 프로필 -->
+  <section class="card-section player-profile">
+    <div class="profile-inner">
+      {% if data.avatar %}
+      <img src="{{ data.avatar }}" alt="{{ data.name }}" class="player-avatar">
+      {% else %}
+      <div class="player-avatar-placeholder">⚾</div>
+      {% endif %}
+      <div class="profile-info">
+        <h2 class="profile-name">{{ data.name }}</h2>
+        <div class="profile-meta">
+          {% if data.team %}<span>🏟️ {{ data.team }}</span>{% endif %}
+          {% if data.position %}<span>🧤 {{ data.position }}</span>{% endif %}
+          {% if data.birth %}<span>📅 {{ data.birth }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 시즌 기록 -->
+  {% if data.season_stats %}
+  <section class="card-section">
+    <h2 class="section-title">시즌 기록</h2>
+    <div class="table-wrap">
+      <table class="data-table">
+        {% if data.stat_headers %}
+        <thead>
+          <tr>{% for h in data.stat_headers %}<th>{{ h }}</th>{% endfor %}</tr>
+        </thead>
+        {% endif %}
+        <tbody>
+          {% for row in data.season_stats %}
+          <tr>
+            {% for cell in row %}
+            <td class="{% if loop.index == 1 %}font-bold{% endif %}">{{ cell }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- 최근 경기 기록 -->
+  {% if data.game_log %}
+  <section class="card-section">
+    <h2 class="section-title">최근 경기 기록</h2>
+    <div class="table-wrap">
+      <table class="data-table">
+        {% if data.game_log_headers %}
+        <thead>
+          <tr>
+            {% for h in data.game_log_headers %}<th>{{ h }}</th>{% endfor %}
+            <th>상세</th>
+          </tr>
+        </thead>
+        {% endif %}
+        <tbody>
+          {% for entry in data.game_log %}
+          <tr>
+            {% for cell in entry.cells %}<td>{{ cell }}</td>{% endfor %}
+            <td>
+              {% if entry.game_code %}
+              <a href="/game/{{ entry.game_code }}" class="detail-link">보기</a>
+              {% else %}-{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if not data.season_stats and not data.game_log %}
+  <div class="card-section empty-box">
+    <p>기록 데이터를 불러오는 중이에요.</p>
+  </div>
+  {% endif %}
+
+  {% endif %}
+</div>
+{% endblock %}

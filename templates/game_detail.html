@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}경기 상세 — KBO 분석{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="hero-title">⚾ 경기 기록</h1>
+  <p class="hero-sub">
+    {% if data and data.away_team %}
+      {{ data.away_team }} vs {{ data.home_team }}
+      &nbsp;·&nbsp; {{ data.date[:4] }}.{{ data.date[4:6] }}.{{ data.date[6:8] }}
+    {% else %}
+      경기 상세 기록
+    {% endif %}
+  </p>
+</div>
+
+<div class="container">
+  <a href="/" class="back-btn">← 경기 목록으로</a>
+
+  {% if not data %}
+  <div class="card-section empty-box">
+    <p>경기 데이터를 불러올 수 없어요.<br>잠시 후 다시 시도해주세요.</p>
+  </div>
+
+  {% else %}
+
+  <!-- 박스스코어 -->
+  {% if data.box %}
+  <section class="card-section">
+    <h2 class="section-title">이닝별 점수</h2>
+    <div class="table-wrap">
+      <table class="data-table box-table">
+        {% for row in data.box %}
+        <tr>
+          {% for cell in row %}
+          <{% if loop.first or row[0] in ['팀','구분'] %}th{% else %}td{% endif %}>{{ cell }}</{% if loop.first or row[0] in ['팀','구분'] %}th{% else %}td{% endif %}>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- 타자 기록 -->
+  <div class="two-col">
+
+    <!-- 원정팀 타자 -->
+    {% if data.away_batting %}
+    <section class="card-section">
+      <h2 class="section-title">{{ data.away_team or '원정' }} 타자 기록</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>선수</th><th>포</th><th>타수</th><th>득점</th><th>안타</th><th>타점</th><th>볼넷</th><th>삼진</th><th>타율</th></tr>
+          </thead>
+          <tbody>
+            {% for p in data.away_batting %}
+            <tr>
+              <td class="player-name">
+                {% if p.player_id %}
+                <a href="/player/{{ p.player_id }}">{{ p.name }}</a>
+                {% else %}{{ p.name }}{% endif %}
+              </td>
+              <td>{{ p.pos }}</td><td>{{ p.ab }}</td><td>{{ p.r }}</td>
+              <td>{{ p.h }}</td><td>{{ p.rbi }}</td><td>{{ p.bb }}</td>
+              <td>{{ p.so }}</td><td class="highlight">{{ p.avg }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- 홈팀 타자 -->
+    {% if data.home_batting %}
+    <section class="card-section">
+      <h2 class="section-title">{{ data.home_team or '홈' }} 타자 기록</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>선수</th><th>포</th><th>타수</th><th>득점</th><th>안타</th><th>타점</th><th>볼넷</th><th>삼진</th><th>타율</th></tr>
+          </thead>
+          <tbody>
+            {% for p in data.home_batting %}
+            <tr>
+              <td class="player-name">
+                {% if p.player_id %}
+                <a href="/player/{{ p.player_id }}">{{ p.name }}</a>
+                {% else %}{{ p.name }}{% endif %}
+              </td>
+              <td>{{ p.pos }}</td><td>{{ p.ab }}</td><td>{{ p.r }}</td>
+              <td>{{ p.h }}</td><td>{{ p.rbi }}</td><td>{{ p.bb }}</td>
+              <td>{{ p.so }}</td><td class="highlight">{{ p.avg }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    {% endif %}
+
+  </div>
+
+  <!-- 투수 기록 -->
+  <div class="two-col">
+
+    {% if data.away_pitching %}
+    <section class="card-section">
+      <h2 class="section-title">{{ data.away_team or '원정' }} 투수 기록</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>선수</th><th>이닝</th><th>안타</th><th>실점</th><th>자책</th><th>볼넷</th><th>삼진</th><th>ERA</th><th>결과</th></tr>
+          </thead>
+          <tbody>
+            {% for p in data.away_pitching %}
+            <tr>
+              <td class="player-name">
+                {% if p.player_id %}<a href="/player/{{ p.player_id }}">{{ p.name }}</a>
+                {% else %}{{ p.name }}{% endif %}
+              </td>
+              <td>{{ p.ip }}</td><td>{{ p.h }}</td><td>{{ p.r }}</td>
+              <td>{{ p.er }}</td><td>{{ p.bb }}</td><td>{{ p.so }}</td>
+              <td class="highlight">{{ p.era }}</td>
+              <td><span class="result-badge {{ p.result }}">{{ p.result }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if data.home_pitching %}
+    <section class="card-section">
+      <h2 class="section-title">{{ data.home_team or '홈' }} 투수 기록</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>선수</th><th>이닝</th><th>안타</th><th>실점</th><th>자책</th><th>볼넷</th><th>삼진</th><th>ERA</th><th>결과</th></tr>
+          </thead>
+          <tbody>
+            {% for p in data.home_pitching %}
+            <tr>
+              <td class="player-name">
+                {% if p.player_id %}<a href="/player/{{ p.player_id }}">{{ p.name }}</a>
+                {% else %}{{ p.name }}{% endif %}
+              </td>
+              <td>{{ p.ip }}</td><td>{{ p.h }}</td><td>{{ p.r }}</td>
+              <td>{{ p.er }}</td><td>{{ p.bb }}</td><td>{{ p.so }}</td>
+              <td class="highlight">{{ p.era }}</td>
+              <td><span class="result-badge {{ p.result }}">{{ p.result }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    {% endif %}
+
+  </div>
+
+  {% if not data.box and not data.away_batting and not data.home_batting %}
+  <div class="card-section empty-box">
+    <p>아직 경기가 시작되지 않았거나 데이터를 불러올 수 없어요.</p>
+  </div>
+  {% endif %}
+
+  {% endif %}
+</div>
+{% endblock %}

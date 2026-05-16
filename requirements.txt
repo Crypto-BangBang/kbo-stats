@@ -1,0 +1,11 @@
+flask
+flask-login
+flask-sqlalchemy
+requests
+beautifulsoup4
+authlib
+gunicorn
+psycopg2-binary
+werkzeug
+lxml
+python-dotenv

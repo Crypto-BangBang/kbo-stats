@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}로그인 — KBO 분석{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">⚾</div>
+    <h2 class="auth-title">로그인</h2>
+
+    <form method="POST" action="/login" class="auth-form">
+      <div class="form-group">
+        <label>이메일</label>
+        <input type="email" name="email" placeholder="example@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>비밀번호</label>
+        <input type="password" name="password" placeholder="비밀번호 입력" required>
+      </div>
+      <button type="submit" class="btn-auth">로그인</button>
+    </form>
+
+    <div class="divider"><span>또는 소셜 로그인</span></div>
+
+    <div class="social-btns">
+      <a href="/auth/kakao" class="social-btn kakao">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#000000" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C6.48 3 2 6.48 2 10.8c0 2.72 1.6 5.12 4 6.56l-1.04 3.84 4.48-2.96c.8.16 1.68.24 2.56.24 5.52 0 10-3.44 10-7.68S17.52 3 12 3z"/></svg>
+        카카오로 로그인
+      </a>
+      <a href="/auth/naver" class="social-btn naver">
+        <span style="font-weight:700;font-size:14px;color:#fff;">N</span>
+        네이버로 로그인
+      </a>
+    </div>
+
+    <p class="auth-switch">계정이 없으신가요? <a href="/register">회원가입</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+{% block title %}구장가이드 — KBO 분석{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="hero-title">🏟️ 구장 가이드</h1>
+  <p class="hero-sub">KBO 1군 · 2군 구장 완벽 정보</p>
+</div>
+
+<div class="container">
+
+  <div class="stadium-filter">
+    <button class="filter-btn active" onclick="filterStadium('all', this)">전체</button>
+    <button class="filter-btn tier-1" onclick="filterStadium('1군', this)">⚾ 1군</button>
+    <button class="filter-btn tier-2" onclick="filterStadium('2군', this)">🌱 2군 (퓨처스)</button>
+    <button class="filter-btn" onclick="filterStadium('서울', this)">서울</button>
+    <button class="filter-btn" onclick="filterStadium('경기', this)">경기</button>
+    <button class="filter-btn" onclick="filterStadium('지방', this)">지방</button>
+  </div>
+
+  <!-- 1군 구장 -->
+  <h2 class="tier-heading" id="heading-1군">⚾ 1군 구장</h2>
+  <div class="stadium-grid" id="stadiumGrid">
+
+    <a href="/stadium/jamsil" class="stadium-card" data-region="서울" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#003087,#0066cc);">
+        <div class="stadium-logo-wrap">
+          <img src="/static/logos/lg.svg" alt="LG" class="stadium-logo logo-sm">
+          <img src="/static/logos/doosan.svg" alt="두산" class="stadium-logo logo-sm">
+        </div>
+      </div>
+      <div class="stadium-info">
+        <h3>잠실야구장 →</h3>
+        <p class="stadium-team">두산 베어스 · LG 트윈스 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 서울 송파구 올림픽로 19-2</li>
+          <li>🚇 지하철 2호선 잠실역 5번 출구</li>
+          <li>👥 수용 26,100명</li>
+          <li>🅿️ 주차 가능 (경기일 혼잡)</li>
+          <li>🍺 편의점·치킨·족발 등 다양한 매점</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">대형구장</span>
+          <span class="tag">대중교통 편리</span>
+          <span class="tag">야경 명소</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/gocheok" class="stadium-card" data-region="서울" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#ff6600,#ff9900);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/kiwoom.svg" alt="키움" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>고척스카이돔 →</h3>
+        <p class="stadium-team">키움 히어로즈 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 서울 구로구 경인로 430</li>
+          <li>🚇 지하철 1호선 구일역 도보 5분</li>
+          <li>👥 수용 16,000명</li>
+          <li>☔ 국내 유일 돔구장 (우천 취소 없음)</li>
+          <li>🍺 다양한 음식 코너 운영</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">돔구장</span>
+          <span class="tag">우천 취소 없음</span>
+          <span class="tag">냉난방 완비</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/suwon" class="stadium-card" data-region="경기" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#c8102e,#8b0000);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/kt.svg" alt="KT" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>수원KT위즈파크 →</h3>
+        <p class="stadium-team">KT 위즈 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 경기 수원시 장안구 경수대로 893</li>
+          <li>🚇 1호선 수원역 → 버스 이동</li>
+          <li>👥 수용 20,000명</li>
+          <li>🅿️ 주차장 완비</li>
+          <li>🍺 수원왕갈비 등 지역 맛집 입점</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">넓은 주차장</span>
+          <span class="tag">편의시설 우수</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/incheon" class="stadium-card" data-region="경기" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#0047ab,#002868);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/ssg.svg" alt="SSG" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>인천SSG랜더스필드 →</h3>
+        <p class="stadium-team">SSG 랜더스 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 인천 미추홀구 매소홀로 618</li>
+          <li>🚇 인천1호선 문학경기장역 도보 5분</li>
+          <li>👥 수용 23,000명</li>
+          <li>🛍️ 이마트 연계 쇼핑 가능</li>
+          <li>🍺 신세계 계열 F&B 입점</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">대형구장</span>
+          <span class="tag">쇼핑 연계</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/daegu" class="stadium-card" data-region="지방" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#074ca1,#0a6fd4);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/samsung.svg" alt="삼성" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>대구삼성라이온즈파크 →</h3>
+        <p class="stadium-team">삼성 라이온즈 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 대구 수성구 야구전설로 1</li>
+          <li>🚇 대구지하철 2호선 대공원역</li>
+          <li>👥 수용 24,000명</li>
+          <li>🏆 2016년 개장 최신 시설</li>
+          <li>🍺 치킨·맥주·냉면 등 다양한 메뉴</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">최신 시설</span>
+          <span class="tag">쾌적한 환경</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/busan" class="stadium-card" data-region="지방" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#1a237e,#283593);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/lotte.svg" alt="롯데" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>부산사직야구장 →</h3>
+        <p class="stadium-team">롯데 자이언츠 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 부산 동래구 사직로 45</li>
+          <li>🚇 부산지하철 3호선 사직역 1번 출구</li>
+          <li>👥 수용 24,700명</li>
+          <li>🌊 부산 야구 성지</li>
+          <li>🍺 부산 향토 음식 매점 운영</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">뜨거운 응원</span>
+          <span class="tag">성지 분위기</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/gwangju" class="stadium-card" data-region="지방" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#cc0000,#8b0000);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/kia.svg" alt="KIA" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>광주-기아 챔피언스 필드 →</h3>
+        <p class="stadium-team">KIA 타이거즈 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 광주 북구 서림로 10</li>
+          <li>🚇 광주지하철 1호선 화정역</li>
+          <li>👥 수용 20,500명</li>
+          <li>🏆 KIA의 심장, 타이거즈의 성지</li>
+          <li>🍺 광주 5미 특선 음식 매점</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">열정 응원</span>
+          <span class="tag">전통 명가</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/daejeon" class="stadium-card" data-region="지방" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#ff6b00,#e55a00);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/hanwha.svg" alt="한화" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>한화생명이글스파크 →</h3>
+        <p class="stadium-team">한화 이글스 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 대전 중구 대종로 373</li>
+          <li>🚌 대전 버스 이용 권장</li>
+          <li>👥 수용 13,000명</li>
+          <li>⚡ 이글스의 홈, 불꽃 응원</li>
+          <li>🍺 대전 순대·튀김 등 로컬 푸드</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">분위기 최고</span>
+          <span class="tag">로컬 감성</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/changwon" class="stadium-card" data-region="지방" data-tier="1군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#1a3a6e,#020d20);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/nc.svg" alt="NC" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>창원NC파크 →</h3>
+        <p class="stadium-team">NC 다이노스 홈구장</p>
+        <ul class="stadium-details">
+          <li>📍 경남 창원시 마산회원구 삼호로 63</li>
+          <li>🚌 창원버스터미널에서 버스 이용</li>
+          <li>👥 수용 22,000명</li>
+          <li>🦖 공룡 테마 인테리어</li>
+          <li>🍺 창원 해산물·아구찜 등 지역 특식</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag">최신 시설</span>
+          <span class="tag">공룡 테마</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- 2군 구장 -->
+  <h2 class="tier-heading" id="heading-2군">🌱 2군 구장 (퓨처스리그)</h2>
+  <p class="tier-desc">퓨처스리그(2군) 전용 구장입니다. 미래 스타를 가장 먼저 만날 수 있어요!</p>
+  <div class="stadium-grid" id="stadiumGrid2">
+
+    <a href="/stadium/ulsan" class="stadium-card" data-region="지방" data-tier="2군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#1a237e,#283593);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/lotte.svg" alt="롯데" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>울산문수야구장 →</h3>
+        <p class="stadium-team">롯데 자이언츠 2군</p>
+        <ul class="stadium-details">
+          <li>📍 울산 남구 문수로 44</li>
+          <li>🚌 울산 시내버스 이용</li>
+          <li>👥 수용 12,000명</li>
+          <li>🌊 울산만의 감성 야구장</li>
+          <li>💜 롯데 유망주 발굴 현장</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag tag-futures">퓨처스</span>
+          <span class="tag">소규모</span>
+          <span class="tag">친근한 분위기</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/icheon_lg" class="stadium-card" data-region="경기" data-tier="2군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#c8032c,#8b0010);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/lg.svg" alt="LG" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>이천LG챔피언스파크 →</h3>
+        <p class="stadium-team">LG 트윈스 2군</p>
+        <ul class="stadium-details">
+          <li>📍 경기 이천시 이섭대천로 413</li>
+          <li>🚌 이천터미널 하차 후 택시 이용</li>
+          <li>👥 수용 약 3,000명</li>
+          <li>🏋️ LG 전용 훈련·육성 시설</li>
+          <li>⭐ LG 유망주 조기 발굴 성지</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag tag-futures">퓨처스</span>
+          <span class="tag">유망주 성지</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/icheon_doosan" class="stadium-card" data-region="경기" data-tier="2군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#131230,#2c2c6e);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/doosan.svg" alt="두산" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>이천두산베어스파크 →</h3>
+        <p class="stadium-team">두산 베어스 2군</p>
+        <ul class="stadium-details">
+          <li>📍 경기 이천시 마장면 덕이로 228</li>
+          <li>🚌 이천터미널 하차 후 이동</li>
+          <li>👥 수용 약 3,000명</li>
+          <li>🐻 두산 유망주 전용 훈련지</li>
+          <li>⭐ 베어스 미래 선수 직관 가능</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag tag-futures">퓨처스</span>
+          <span class="tag">유망주 성지</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/gyeongsan" class="stadium-card" data-region="지방" data-tier="2군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#074ca1,#0a6fd4);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/samsung.svg" alt="삼성" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>경산삼성라이온즈파크 →</h3>
+        <p class="stadium-team">삼성 라이온즈 2군</p>
+        <ul class="stadium-details">
+          <li>📍 경북 경산시 삼성로 100</li>
+          <li>🚇 대구지하철 2호선 경산역 → 버스</li>
+          <li>👥 수용 약 5,000명</li>
+          <li>🦁 삼성 유망주 육성 전용 구장</li>
+          <li>⭐ 대구와 가까워 접근 용이</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag tag-futures">퓨처스</span>
+          <span class="tag">경산</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/cheongju" class="stadium-card" data-region="지방" data-tier="2군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#ff6b00,#e55a00);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/hanwha.svg" alt="한화" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>청주한화생명이글스파크 →</h3>
+        <p class="stadium-team">한화 이글스 2군</p>
+        <ul class="stadium-details">
+          <li>📍 충북 청주시 청원구 오창읍</li>
+          <li>🚌 청주 시내버스 이용</li>
+          <li>👥 수용 약 5,000명</li>
+          <li>🦅 이글스 유망주 전용 구장</li>
+          <li>⭐ 청주 팬들의 열정 응원</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag tag-futures">퓨처스</span>
+          <span class="tag">청주</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/stadium/goyang" class="stadium-card" data-region="경기" data-tier="2군">
+      <div class="stadium-img" style="background: linear-gradient(135deg,#a00028,#3a0010);">
+        <div class="stadium-logo-wrap"><img src="/static/logos/kiwoom.svg" alt="키움" class="stadium-logo"></div>
+      </div>
+      <div class="stadium-info">
+        <h3>고양키움히어로즈파크 →</h3>
+        <p class="stadium-team">키움 히어로즈 2군</p>
+        <ul class="stadium-details">
+          <li>📍 경기 고양시 덕양구</li>
+          <li>🚇 3호선 원흥역 → 버스 이동</li>
+          <li>👥 수용 약 4,000명</li>
+          <li>⚡ 히어로즈 유망주 전용 구장</li>
+          <li>⭐ 고척돔 스타의 시작점</li>
+        </ul>
+        <div class="stadium-tags">
+          <span class="tag tag-futures">퓨처스</span>
+          <span class="tag">고양</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- 관람 팁 배너 -->
+  <section class="card-section tip-banner">
+    <h2 class="section-title">⚡ 구장 방문 필수 체크리스트</h2>
+    <div class="checklist-grid">
+      <div class="check-item">🎟️ <strong>입장권</strong><br>공식 앱 또는 인터파크에서 사전 구매 권장</div>
+      <div class="check-item">🧢 <strong>응원도구</strong><br>응원봉·유니폼·메가폰 지참 (현장 구매도 가능)</div>
+      <div class="check-item">🚇 <strong>대중교통</strong><br>경기일 주차 극도로 혼잡, 지하철 권장</div>
+      <div class="check-item">🌂 <strong>우천 대비</strong><br>돔구장 외 우천 취소 가능, 우비 챙기기</div>
+      <div class="check-item">🌱 <strong>2군 직관 팁</strong><br>입장료 저렴하고 한산해서 야구 보기 딱 좋아요!</div>
+      <div class="check-item">📱 <strong>앱 준비</strong><br>KBO 공식 앱으로 실시간 기록 확인</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function filterStadium(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.stadium-card').forEach(card => {
+    const region = card.dataset.region;
+    const tier   = card.dataset.tier;
+    const show = filter === 'all'
+      || filter === tier
+      || filter === region;
+    card.style.display = show ? '' : 'none';
+  });
+
+  // 섹션 헤딩 표시/숨김
+  const h1 = document.getElementById('heading-1군');
+  const h2 = document.getElementById('heading-2군');
+  const d2 = document.querySelector('.tier-desc');
+  if (filter === '2군') {
+    h1.style.display = 'none';
+  } else {
+    h1.style.display = '';
+  }
+  if (filter === '1군') {
+    h2.style.display = 'none';
+    if (d2) d2.style.display = 'none';
+  } else {
+    h2.style.display = '';
+    if (d2) d2.style.display = '';
+  }
+}
+</script>
+{% endblock %}

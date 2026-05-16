@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}응원가 — KBO 분석{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="hero-title">🎤 구단별 응원가</h1>
+  <p class="hero-sub">KBO 10개 구단 팀 응원가 · 선수별 응원가 가이드</p>
+</div>
+
+<div class="container">
+
+  <!-- 팀 선택 탭 -->
+  <div class="cheer-team-tabs">
+    {% for tid, td in cheer.items() %}
+    <a href="/cheer?team={{ tid }}"
+       class="cheer-team-tab {% if tid == team %}active{% endif %}"
+       style="{% if tid == team %}background:{{ td.bg }};color:#fff;border-color:transparent;{% endif %}">
+      <img src="{{ td.logo }}" alt="{{ td.name }}" class="tab-logo">
+      {{ td.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- 현재 팀 헤더 -->
+  <div class="cheer-hero" style="background: {{ cur.bg }};">
+    <div class="cheer-hero-inner">
+      <img src="{{ cur.logo }}" alt="{{ cur.name }}" class="cheer-hero-logo">
+      <div>
+        <h2 class="cheer-hero-name">{{ cur.name }}</h2>
+        <p class="cheer-hero-sub">응원가 · 응원 구호 · 선수별 응원가</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 팀 응원가 -->
+  <section class="card-section">
+    <h2 class="section-title">🎵 팀 응원가 · 응원 구호</h2>
+    <div class="song-list">
+      {% for song in cur.team_songs %}
+      <div class="song-card">
+        <div class="song-header">
+          <div>
+            <span class="song-type-badge">{{ song.type }}</span>
+            <h3 class="song-title">{{ song.title }}</h3>
+          </div>
+          <a href="https://www.youtube.com/results?search_query={{ song.yt | urlencode }}"
+             target="_blank" class="yt-btn" title="유튜브에서 듣기">
+            ▶ 유튜브
+          </a>
+        </div>
+        <p class="song-desc">{{ song.desc }}</p>
+        <div class="song-lyrics-wrap">
+          <button class="lyrics-toggle" onclick="toggleLyrics(this)">가사 보기 ▼</button>
+          <pre class="song-lyrics" style="display:none;">{{ song.chant }}</pre>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 응원 문화 팁 -->
+  <section class="card-section tip-banner">
+    <h2 class="section-title">🎺 응원 문화 가이드</h2>
+    <div class="checklist-grid">
+      <div class="check-item">🥢 <strong>응원봉</strong><br>팀 공식 응원봉을 현장 또는 온라인에서 구매하세요</div>
+      <div class="check-item">👕 <strong>유니폼</strong><br>응원하는 선수 등번호 유니폼을 입으면 더 신나요!</div>
+      <div class="check-item">🎵 <strong>응원가 예습</strong><br>유튜브로 미리 익혀두면 현장에서 훨씬 재밌어요</div>
+      <div class="check-item">🤝 <strong>응원 예절</strong><br>상대팀 응원석을 방해하거나 야유하지 않는 것이 기본 매너</div>
+      <div class="check-item">📣 <strong>응원단 따라하기</strong><br>전광판 가사 보며 응원단 선창에 맞춰 따라 부르세요</div>
+      <div class="check-item">🍺 <strong>응원 중 음식</strong><br>치맥과 함께하면 응원이 두 배로 즐거워요!</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function toggleLyrics(btn) {
+  const pre = btn.nextElementSibling;
+  if (pre.style.display === 'none') {
+    pre.style.display = 'block';
+    btn.textContent = btn.textContent.replace('보기 ▼', '접기 ▲');
+  } else {
+    pre.style.display = 'none';
+    btn.textContent = btn.textContent.replace('접기 ▲', '보기 ▼');
+  }
+}
+</script>
+{% endblock %}

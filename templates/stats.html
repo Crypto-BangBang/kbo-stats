@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}선수기록 — KBO 분석{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="hero-title">📊 선수기록</h1>
+  <p class="hero-sub">2025 시즌 KBO 리그 공식 기록</p>
+</div>
+
+<div class="container">
+
+  <!-- 탭 -->
+  <div class="tab-bar">
+    <a href="/stats?tab=batting"  class="tab-btn {% if tab=='batting' %}active{% endif %}">🏏 타자</a>
+    <a href="/stats?tab=pitching" class="tab-btn {% if tab=='pitching' %}active{% endif %}">⚾ 투수</a>
+  </div>
+
+  <!-- 검색 -->
+  <div class="search-row">
+    <input type="text" id="searchInput" placeholder="선수 이름 또는 팀 검색..." class="search-input" oninput="filterTable()">
+  </div>
+
+  {% if tab == 'batting' %}
+  <!-- 타자 기록 -->
+  <section class="card-section">
+    <h2 class="section-title">타자 기록 (타율 순)</h2>
+    {% if data %}
+    <div class="table-wrap">
+      <table class="data-table" id="statsTable">
+        <thead>
+          <tr>
+            <th>순위</th><th>선수</th><th>팀</th><th>경기</th>
+            <th>타수</th><th>안타</th><th>홈런</th><th>타점</th>
+            <th class="highlight">타율</th><th>출루율</th><th>장타율</th><th>OPS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in data %}
+          <tr>
+            <td>{{ p.rank }}</td>
+            <td class="player-name">
+              {% if p.player_id %}
+              <a href="/player/{{ p.player_id }}">{{ p.name }}</a>
+              {% else %}{{ p.name }}{% endif %}
+            </td>
+            <td>{{ p.team }}</td>
+            <td>{{ p.games }}</td>
+            <td>{{ p.ab }}</td>
+            <td>{{ p.hits }}</td>
+            <td>{{ p.hr }}</td>
+            <td>{{ p.rbi }}</td>
+            <td class="highlight stat-num">{{ p.avg }}</td>
+            <td class="stat-num">{{ p.obp }}</td>
+            <td class="stat-num">{{ p.slg }}</td>
+            <td class="stat-num">{{ p.ops }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-box"><p>기록 데이터를 불러오는 중이에요.</p></div>
+    {% endif %}
+  </section>
+
+  <!-- 타자 차트 -->
+  {% if data %}
+  <section class="card-section">
+    <h2 class="section-title">타율 TOP 10</h2>
+    <div class="chart-wrap">
+      <canvas id="battingChart"></canvas>
+    </div>
+  </section>
+  {% endif %}
+
+  {% else %}
+  <!-- 투수 기록 -->
+  <section class="card-section">
+    <h2 class="section-title">투수 기록 (ERA 순)</h2>
+    {% if data %}
+    <div class="table-wrap">
+      <table class="data-table" id="statsTable">
+        <thead>
+          <tr>
+            <th>순위</th><th>선수</th><th>팀</th><th>경기</th>
+            <th>승</th><th>패</th><th>세이브</th><th>이닝</th>
+            <th class="highlight">ERA</th><th>삼진</th><th>WHIP</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in data %}
+          <tr>
+            <td>{{ p.rank }}</td>
+            <td class="player-name">
+              {% if p.player_id %}
+              <a href="/player/{{ p.player_id }}">{{ p.name }}</a>
+              {% else %}{{ p.name }}{% endif %}
+            </td>
+            <td>{{ p.team }}</td>
+            <td>{{ p.games }}</td>
+            <td class="win">{{ p.wins }}</td>
+            <td class="loss">{{ p.losses }}</td>
+            <td>{{ p.saves }}</td>
+            <td>{{ p.ip }}</td>
+            <td class="highlight stat-num">{{ p.era }}</td>
+            <td>{{ p.so }}</td>
+            <td class="stat-num">{{ p.whip }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-box"><p>기록 데이터를 불러오는 중이에요.</p></div>
+    {% endif %}
+  </section>
+
+  <!-- 투수 차트 -->
+  {% if data %}
+  <section class="card-section">
+    <h2 class="section-title">ERA TOP 10</h2>
+    <div class="chart-wrap">
+      <canvas id="pitchingChart"></canvas>
+    </div>
+  </section>
+  {% endif %}
+  {% endif %}
+
+</div>
+
+<script>
+function filterTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('#statsTable tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+{% if tab == 'batting' and data %}
+const bLabels = [{% for p in data[:10] %}"{{ p.name }}"{% if not loop.last %},{% endif %}{% endfor %}];
+const bData   = [{% for p in data[:10] %}{{ p.avg if p.avg != '-' else 0 }}{% if not loop.last %},{% endif %}{% endfor %}];
+new Chart(document.getElementById('battingChart'), {
+  type: 'bar',
+  data: {
+    labels: bLabels,
+    datasets: [{ label: '타율', data: bData, backgroundColor: 'rgba(0,123,255,0.7)', borderRadius: 6 }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { min: 0, max: 0.5 } }
+  }
+});
+{% endif %}
+
+{% if tab == 'pitching' and data %}
+const pLabels = [{% for p in data[:10] %}"{{ p.name }}"{% if not loop.last %},{% endif %}{% endfor %}];
+const pData   = [{% for p in data[:10] %}{{ p.era if p.era != '-' else 0 }}{% if not loop.last %},{% endif %}{% endfor %}];
+new Chart(document.getElementById('pitchingChart'), {
+  type: 'bar',
+  data: {
+    labels: pLabels,
+    datasets: [{ label: 'ERA', data: pData, backgroundColor: 'rgba(220,53,69,0.7)', borderRadius: 6 }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { min: 0 } }
+  }
+});
+{% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}경기현황 — KBO 분석{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="hero-title">⚾ 오늘의 경기</h1>
+  <p class="hero-sub">{{ today }} 실시간 KBO 경기 현황</p>
+</div>
+
+<div class="container">
+
+  <!-- 오늘 경기 -->
+  <section class="card-section">
+    <h2 class="section-title">경기 일정</h2>
+    {% if games %}
+      <div class="games-grid">
+        {% for g in games %}
+        {% if g.game_code %}
+        <a href="/game/{{ g.game_code }}" class="game-card game-card-link">
+        {% else %}
+        <div class="game-card">
+        {% endif %}
+          <div class="game-time">{{ g.time }}{% if g.status %} · {{ g.status }}{% endif %}</div>
+          <div class="game-teams">
+            <span class="team away">{{ g.away }}</span>
+            <span class="game-score">{{ g.score if g.score else 'vs' }}</span>
+            <span class="team home">{{ g.home }}</span>
+          </div>
+          {% if g.stadium %}
+          <div class="game-stadium">📍 {{ g.stadium }}</div>
+          {% endif %}
+          {% if g.game_code %}
+          <div class="game-detail-hint">기록 보기 →</div>
+          {% endif %}
+        {% if g.game_code %}</a>{% else %}</div>{% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-box">
+        <p>오늘은 경기가 없거나 아직 일정이 발표되지 않았어요.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- 팀 순위 -->
+  <section class="card-section">
+    <h2 class="section-title">팀 순위</h2>
+    {% if teams %}
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>순위</th><th>팀</th><th>경기</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>게임차</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in teams %}
+            <tr class="{% if loop.index <= 5 %}playoff{% endif %}">
+              <td class="rank-cell">
+                {% if loop.index == 1 %}🥇
+                {% elif loop.index == 2 %}🥈
+                {% elif loop.index == 3 %}🥉
+                {% else %}{{ t.rank }}{% endif %}
+              </td>
+              <td class="team-name">{{ t.team }}</td>
+              <td>{{ t.games }}</td>
+              <td class="win">{{ t.wins }}</td>
+              <td class="loss">{{ t.losses }}</td>
+              <td>{{ t.draws }}</td>
+              <td class="pct">{{ t.pct }}</td>
+              <td>{{ t.gb }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">* 상위 5팀 포스트시즌 진출</p>
+    {% else %}
+      <div class="empty-box"><p>순위 데이터를 불러오는 중이에요.</p></div>
+    {% endif %}
+  </section>
+
+  <!-- 팀 순위 차트 -->
+  {% if teams %}
+  <section class="card-section">
+    <h2 class="section-title">승률 차트</h2>
+    <div class="chart-wrap">
+      <canvas id="teamChart"></canvas>
+    </div>
+  </section>
+  {% endif %}
+
+</div>
+
+<script>
+{% if teams %}
+const labels = [{% for t in teams %}"{{ t.team }}"{% if not loop.last %},{% endif %}{% endfor %}];
+const pcts   = [{% for t in teams %}{{ t.pct if t.pct != '-' else 0 }}{% if not loop.last %},{% endif %}{% endfor %}];
+const colors = labels.map((_, i) => `hsl(${210 + i * 15}, 70%, ${55 + i * 2}%)`);
+
+new Chart(document.getElementById('teamChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [{
+      label: '승률',
+      data: pcts,
+      backgroundColor: colors,
+      borderRadius: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 0, max: 1, ticks: { callback: v => (v * 100).toFixed(0) + '%' } }
+    }
+  }
+});
+{% endif %}
+</script>
+{% endblock %}

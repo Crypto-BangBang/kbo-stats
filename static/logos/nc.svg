@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a3a6e"/>
+      <stop offset="100%" stop-color="#020d20"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="49" fill="#fff"/>
+  <circle cx="50" cy="50" r="46" fill="url(#g)"/>
+  <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(100,160,255,0.4)" stroke-width="1.5"/>
+  <text x="50" y="50" text-anchor="middle" fill="#fff" font-size="34" font-weight="900" font-family="Arial Black,sans-serif">NC</text>
+  <text x="50" y="65" text-anchor="middle" fill="rgba(100,180,255,0.85)" font-size="9.5" font-family="Arial,sans-serif" letter-spacing="2">DINOS</text>
+  <text x="50" y="77" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="7.5" font-family="Arial,sans-serif">다이노스</text>
+</svg>

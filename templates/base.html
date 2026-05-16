@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}KBO 분석{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">⚾ KBO 분석</a>
+      <div class="nav-links">
+        <a href="/" class="{% if request.endpoint=='index' %}active{% endif %}">경기현황</a>
+        <a href="/schedule" class="{% if request.endpoint=='schedule' %}active{% endif %}">경기기록</a>
+        <a href="/stats" class="{% if request.endpoint=='stats' %}active{% endif %}">선수기록</a>
+        <a href="/stadium" class="{% if request.endpoint=='stadium' %}active{% endif %}">구장가이드</a>
+        <a href="/tips" class="{% if request.endpoint=='tips' %}active{% endif %}">야구꿀팁</a>
+        <a href="/cheer" class="{% if request.endpoint=='cheer' %}active{% endif %}">응원가</a>
+      </div>
+      <div class="nav-auth">
+        {% if current_user.is_authenticated %}
+          <span class="nav-user">{{ current_user.name }}</span>
+          <a href="/logout" class="btn-outline">로그아웃</a>
+        {% else %}
+          <a href="/login" class="btn-outline">로그인</a>
+          <a href="/register" class="btn-primary">회원가입</a>
+        {% endif %}
+      </div>
+      <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile">
+      <a href="/">경기현황</a>
+      <a href="/schedule">경기기록</a>
+      <a href="/stats">선수기록</a>
+      <a href="/stadium">구장가이드</a>
+      <a href="/tips">야구꿀팁</a>
+      <a href="/cheer">응원가</a>
+      {% if current_user.is_authenticated %}
+        <a href="/logout">로그아웃</a>
+      {% else %}
+        <a href="/login">로그인</a>
+        <a href="/register">회원가입</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-wrap">
+        {% for msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="footer">
+    <p>⚾ KBO 분석 — 데이터 출처: KBO 공식 기록실</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('nav-mobile').classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
